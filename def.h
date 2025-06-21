@@ -1,0 +1,53 @@
+#pragma once
+#define VERSION "v1.1"
+#include <string>
+
+
+inline std::string explanation = 
+	"Hash-DataBase " VERSION "   (C) 2025 yy981"
+	"\nUsage: hashdb <Mode> <Key(ハッシュ値orファイルパス)> [<内容>]"
+	"\n\n   <Mode>"
+	"\n read\t要素を読み込み\t\trとも記述可能"
+	"\n edit\t要素を編集or作成\teとも記述可能"
+	"\n del\t要素を削除\t\tdやdeleteとも記述可能"
+	"\n cal\tSha256計算を行う\tcとも記述可能"
+	"\n pass\t管理パスワードを変更"
+	"\n view\t一覧を表示"
+	"\n 省略し、内容が入力されなかった場合、要素を読み込む"
+	"\n 　　　内容が入力された場合、要素を書き込む"
+	"\n\n   <内容>"
+	"\n editモード\t保存したい情報を入力"
+	"\n モード\t保存したい情報を入力"
+	"\n その他\t必要なし"
+	"\n   <応答文について>"
+	"\n []内はハッシュ値 ()内はハッシュ値の元のデータ"
+	"\n Hash\t入力文字列をそのままHash値と解釈"
+	"\n Text\t入力文字列をハッシュ計算し解釈"
+	"\n File\t入力文字列をパスと解釈し、そのファイルをハッシュ計算し解釈"
+	"\n\n   <構文例>"
+	"\n read example"
+	"\n example"
+	"\n edit example text"
+	"\n example text"
+	"\n del example"
+	"\n cal example"
+	"\n pass password"
+	"\n view password";
+
+namespace md {
+	constexpr uint8_t
+		error(0x00), read(0x01), write(0x02), del(0x03), cal(0x04),
+		create(0x14), edit(0x15),
+		hsTPlain(0x21), hsTHash(0x22), hsFile(0x23), hsDir(0x24);
+}
+
+namespace flag {
+	constexpr uint8_t hide(0x51), enc(0x52);
+}
+
+extern const std::string localappdata;
+extern const std::string path;
+extern const std::string ppath;
+extern const std::string dirHashName;
+extern uint8_t hsType;
+extern std::vector<std::string> input;
