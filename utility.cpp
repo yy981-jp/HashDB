@@ -11,6 +11,21 @@
 namespace fs = std::filesystem;
 
 
+void writeDirHashDB(const std::string& DHPath, const std::string& hash) {
+	std::ofstream ofs_DHPath(DHPath);
+	if (!ofs_DHPath) throw std::runtime_error("writeDirHashDB(): .HashDBファイルに出力できません");
+	ofs_DHPath << hash;
+}
+
+std::string loadDirHashDB(const std::string& DHPath) {
+	std::string hash;
+	std::ifstream ifs_DHPath(DHPath);
+	if (!ifs_DHPath) throw std::runtime_error("loadDirHashDB(): .HashDBファイルを読み込めません");
+	std::getline(ifs_DHPath,hash);
+	return hash;
+}
+
+
 std::string recovery(std::string str) {
 	st::replace(str,"\\n","\n");
 	st::replace(str,"\\t","\t");
@@ -49,11 +64,11 @@ std::string getHash(const std::string& str) {
 	if (fs::is_directory(str)) {
 		hsType = md::hsDir;
 		std::string hash;
-		std::string opath = (fs::path(str) / fs::path(dirHashName)).string();
-		if (!fs::exists(opath)) {
+		std::string DHPath = (fs::path(str) / fs::path(dirHashName)).string();
+		if (!fs::exists(DHPath)) {
 			hash = sha256(randomSeed());
-			std::ofstream(opath) << hash;
-		} else std::getline(std::ifstream(opath),hash);
+			writeDirHashDB(DHPath,hash);
+		} else hash = loadDirHashDB(DHPath);
 		return hash;
 	}
 	throw std::runtime_error("getHash(): hsType分岐エラー");

@@ -16,7 +16,7 @@ namespace fs = std::filesystem;
 int main(int argc, char *argv[]) {
 	if (argc < 2) return_u(explanation,true);
 	uint8_t mode;
-	std::string hash, contents, pass;
+	std::string hash, contents;
 
 // ロード
 	if (!fs::exists(path) || !fs::exists(ppath)) {
@@ -50,7 +50,13 @@ int main(int argc, char *argv[]) {
 		else if (is_or(input[1],"delete","del","d")) mode = md::del;
 		else if (is_or(input[1],"read","r")) mode = md::read;
 		else if (is_or(input[1],"cal","c")) mode = md::cal;
+		else if (is_or(input[1],"dir","h")) {
+			hash_i2 = false;
+			mode = md::dir;
+			hash = getHash(input[3]);
+		}
 		else if (input[1]=="view") {
+			std::string pass;
 			std::ifstream ifs(ppath);
 			std::getline(ifs,pass);
 			if (getHash(input[2])==pass) {
@@ -62,6 +68,7 @@ int main(int argc, char *argv[]) {
 		}
 		else if (input[1]=="pass") {
 			std::ifstream ifs(ppath);
+			std::string pass;
 			std::getline(ifs,pass);
 			if (getHash(input[2])==pass) {
 				std::ofstream ofs(ppath);
@@ -78,7 +85,7 @@ int main(int argc, char *argv[]) {
 			hash = getHash(input[1]);
 			contents = join_from(2);
 		}
-		// 省略に対する処理
+		// 省略しなかったものに対する処理
 		if (hash_i2) hash = getHash(input[2]);
 	}
 	if (mode == md::write) {if (db.contains(hash)) mode = md::edit; else mode = md::create;}
@@ -109,6 +116,20 @@ int main(int argc, char *argv[]) {
 			std::cout << "[" << hash << "](" << tostr(hsType) << ")を更新しました\n";
 		} break;
 		case md::cal: std::cout << "Sha256Hash計算結果: [" << hash << "](" << tostr(hsType) << ")\n"; break;
+		case md::dir: {
+			if (!fs::exists(input[2])) return_e("コマンドライン引数2が示すパスは存在しません",4); 
+			std::string DHPath = (fs::path(input[2]) / fs::path(dirHashName)).string();
+			if (!fs::exists(DHPath)) writeDirHashDB(DHPath,hash); else {
+				std::cout << "[警告] そのディレクトリに.HashDBは既に存在します 上書きしますか? [Y,N]?";
+				std::string input_tmp;
+				std::cin >> input_tmp;
+				if (is_or(input_tmp,"Y","y","yes")) {
+					std::cout << " 変更前: [" << loadDirHashDB(DHPath) << "]\n";
+					writeDirHashDB(DHPath,hash);
+					std::cout << " 変更後: [" << hash << "](" << tostr(hsType) << ")\n";
+				} else std::cout << "操作を中止しました\n";
+			}
+		} break;
 		default: throw std::runtime_error("内部モード分岐後エラー");
 	}
 }

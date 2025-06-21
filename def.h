@@ -1,16 +1,17 @@
 #pragma once
-#define VERSION "v1.1"
+#define VERSION "v1.2"
 #include <string>
 
 
 inline std::string explanation = 
 	"Hash-DataBase " VERSION "   (C) 2025 yy981"
-	"\nUsage: hashdb <Mode> <Key(ハッシュ値orファイルパス)> [<内容>]"
+	"\nUsage: HS <Mode> <Key(ハッシュ値orファイルパス)> [<内容>]"
 	"\n\n   <Mode>"
 	"\n read\t要素を読み込み\t\trとも記述可能"
 	"\n edit\t要素を編集or作成\teとも記述可能"
 	"\n del\t要素を削除\t\tdやdeleteとも記述可能"
 	"\n cal\tSha256計算を行う\tcとも記述可能"
+	"\n dir\t.HashDBを手動で生成\thとも記述可能"
 	"\n pass\t管理パスワードを変更"
 	"\n view\t一覧を表示"
 	"\n 省略し、内容が入力されなかった場合、要素を読み込む"
@@ -24,6 +25,7 @@ inline std::string explanation =
 	"\n Hash\t入力文字列をそのままHash値と解釈"
 	"\n Text\t入力文字列をハッシュ計算し解釈"
 	"\n File\t入力文字列をパスと解釈し、そのファイルをハッシュ計算し解釈"
+	"\n Dir\t入力文字列をパスと解釈し、そのフォルダに配置された.HashDBを読む(存在しない場合は自動で生成)"
 	"\n\n   <構文例>"
 	"\n read example"
 	"\n example"
@@ -31,13 +33,14 @@ inline std::string explanation =
 	"\n example text"
 	"\n del example"
 	"\n cal example"
+	"\n dir exampleDir exampleFile"
 	"\n pass password"
 	"\n view password";
 
 namespace md {
 	constexpr uint8_t
 		error(0x00), read(0x01), write(0x02), del(0x03), cal(0x04),
-		create(0x14), edit(0x15),
+		create(0x14), edit(0x15), dir(0x16),
 		hsTPlain(0x21), hsTHash(0x22), hsFile(0x23), hsDir(0x24);
 }
 
