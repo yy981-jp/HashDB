@@ -1,5 +1,5 @@
 #pragma once
-#define VERSION "v1.2"
+#define VERSION "v1.3"
 #include <string>
 
 
@@ -10,7 +10,7 @@ inline std::string explanation =
 	"\n read\t要素を読み込み\t\trとも記述可能"
 	"\n edit\t要素を編集or作成\teとも記述可能"
 	"\n del\t要素を削除\t\tdやdeleteとも記述可能"
-	"\n cal\tSha256計算を行う\tcとも記述可能"
+	"\n show\tHash値を求める\t\tsとも記述可能"
 	"\n dir\t.HashDBを手動で生成\thとも記述可能"
 	"\n pass\t管理パスワードを変更"
 	"\n view\t一覧を表示"
@@ -26,22 +26,24 @@ inline std::string explanation =
 	"\n Text\t入力文字列をハッシュ計算し解釈"
 	"\n File\t入力文字列をパスと解釈し、そのファイルをハッシュ計算し解釈"
 	"\n Dir\t入力文字列をパスと解釈し、そのフォルダに配置された.HashDBを読む(存在しない場合は自動で生成)"
+	"\n HashTF\tファイル内の文字列をそのままHash値と解釈"
+	// "\n HashBF\tファイル内のバイナリデータをそのままHash値と解釈"
 	"\n\n   <構文例>"
 	"\n read example"
 	"\n example"
 	"\n edit example text"
 	"\n example text"
 	"\n del example"
-	"\n cal example"
+	"\n show example"
 	"\n dir exampleDir exampleFile"
 	"\n pass password"
 	"\n view password";
 
 namespace md {
 	constexpr uint8_t
-		error(0x00), read(0x01), write(0x02), del(0x03), cal(0x04),
+		error(0x00), read(0x01), write(0x02), del(0x03), show(0x04),
 		create(0x14), edit(0x15), dir(0x16),
-		hsTPlain(0x21), hsTHash(0x22), hsFile(0x23), hsDir(0x24);
+		hsTPlain(0x21), hsTHash(0x22), hsFile(0x23), hsDir(0x24), hsTextHash(0x25), hsBinHash(0x26);
 }
 
 namespace flag {

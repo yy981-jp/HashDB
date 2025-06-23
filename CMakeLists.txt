@@ -9,6 +9,7 @@ set(SOURCES
 	hashdb.cpp
 	def.cpp
 	utility.cpp
+	core.cpp
 )
 
 # ヘッダーファイル

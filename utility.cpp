@@ -32,48 +32,8 @@ std::string recovery(std::string str) {
 	return str;
 }
 
-std::string tostr(uint8_t type) {
-	switch (type) {
-		case md::hsTPlain: return "Text";
-		case md::hsTHash: return "Hash";
-		case md::hsFile: return "File";
-		case md::hsDir: return "Dir";
-		default: throw std::runtime_error("tostr(): md-hs分岐エラー");
-	}
-	return "ERROR";
-}
-
 bool isHash(const std::string& str) {
-    return str.size() == 64 &&
-           std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isxdigit(c); });
-}
-
-std::string getHash(const std::string& str) {
-	if (isHash(str)) {
-		hsType = md::hsTHash;
-		return str;
-	}
-	if (!fs::exists(str)) {
-		hsType = md::hsTPlain;
-		return sha256(str);
-	}
-	if (fs::is_regular_file(str)) {
-		hsType = md::hsFile;
-		return sha256f(str);
-	}
-	if (fs::is_directory(str)) {
-		hsType = md::hsDir;
-		std::string hash;
-		std::string DHPath = (fs::path(str) / fs::path(dirHashName)).string();
-		if (!fs::exists(DHPath)) {
-			hash = sha256(randomSeed());
-			writeDirHashDB(DHPath,hash);
-		} else hash = loadDirHashDB(DHPath);
-		return hash;
-	}
-	throw std::runtime_error("getHash(): hsType分岐エラー");
-
-	return "0000000000000000000000000000000000000000000000000000000000000000";
+    return str.size() == 64 && std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isxdigit(c); });
 }
 
 std::string join_from(size_t start) {

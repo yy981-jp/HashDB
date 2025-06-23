@@ -9,6 +9,7 @@
 
 #include "def.h"
 #include "utility.h"
+#include "core.h"
 
 namespace fs = std::filesystem;
 
@@ -49,7 +50,7 @@ int main(int argc, char *argv[]) {
 		}
 		else if (is_or(input[1],"delete","del","d")) mode = md::del;
 		else if (is_or(input[1],"read","r")) mode = md::read;
-		else if (is_or(input[1],"cal","c")) mode = md::cal;
+		else if (is_or(input[1],"show","s")) mode = md::show;
 		else if (is_or(input[1],"dir","h")) {
 			hash_i2 = false;
 			mode = md::dir;
@@ -115,7 +116,7 @@ int main(int argc, char *argv[]) {
 			UMB::save(db,path);
 			std::cout << "[" << hash << "](" << tostr(hsType) << ")を更新しました\n";
 		} break;
-		case md::cal: std::cout << "Sha256Hash計算結果: [" << hash << "](" << tostr(hsType) << ")\n"; break;
+		case md::show: std::cout << "Hash: [" << hash << "](" << tostr(hsType) << ")\n"; break;
 		case md::dir: {
 			if (!fs::exists(input[2])) return_e("コマンドライン引数2が示すパスは存在しません",4); 
 			std::string DHPath = (fs::path(input[2]) / fs::path(dirHashName)).string();
