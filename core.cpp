@@ -3,6 +3,7 @@
 #include <filesystem>
 
 #include <yy981/sha256.h>
+#include <yy981/return.h>
 
 #include "core.h"
 #include "def.h"
@@ -27,11 +28,14 @@ std::string tostr(uint8_t type) {
 std::string getHash(const std::string& str) {
 	if (isHash(str)) {
 		hsType = md::hsTHash;
+		if (str==sysPass) return_e(EM0,6);
 		return str;
 	}
 	if (!fs::exists(str)) {
 		hsType = md::hsTPlain;
-		return sha256(str);
+		std::string hash = sha256(str);
+		if (hash==sysPass) return_e(EM0,6);
+		return hash;
 	}
 	if (fs::is_regular_file(str)) {
 		if (fs::file_size(str)==64 && !isHash(str)) {
@@ -40,10 +44,13 @@ std::string getHash(const std::string& str) {
 			std::string hash;
 			std::getline(ifs,hash);
 			hsType = md::hsTextHash;
+			if (hash==sysPass) return_e(EM0,6);
 			return hash;
 		}
 		hsType = md::hsFile;
-		return sha256f(str);
+		std::string hash = sha256f(str);
+		if (hash==sysPass) return_e(EM0,6);
+		return hash;
 	}
 	if (fs::is_directory(str)) {
 		hsType = md::hsDir;
@@ -53,9 +60,10 @@ std::string getHash(const std::string& str) {
 			hash = sha256(randomSeed());
 			writeDirHashDB(DHPath,hash);
 		} else hash = loadDirHashDB(DHPath);
+		if (hash==sysPass) return_e(EM0,6);
 		return hash;
 	}
 	throw std::runtime_error("getHash(): hsType分岐エラー");
 
-	return "0000000000000000000000000000000000000000000000000000000000000000";
+	return "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 }

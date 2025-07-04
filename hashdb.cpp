@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
 	std::string hash, contents;
 
 // ロード
+	bool setup0 = false;
 	if (!fs::exists(path) || !fs::exists(ppath)) {
 		if (!fs::exists(path)) if (!std::ofstream(path)) return_e("初期セットアップ失敗_UMB",3);
 		if (!fs::exists(ppath)) {
@@ -29,11 +30,16 @@ int main(int argc, char *argv[]) {
 			std::ofstream ofs(ppath);
 			if (!ofs) return_e("初期セットアップ失敗_DAT",3);
 			ofs << getHash(input);
+			setup0 = true;
 		}
 		std::cout << "初期セットアップ完了\n";
 		return 0;
 	}
 	std::unordered_map<std::string,std::string> db = UMB::load(path);
+	if (setup0) {
+		db.emplace(sysPass,sha256(randomSeed()));
+		UMB::save(db,path);
+	}
 
 // 入力整形
 	input = st::charV(argc,argv);
@@ -50,7 +56,7 @@ int main(int argc, char *argv[]) {
 		}
 		else if (is_or(input[1],"delete","del","d")) mode = md::del;
 		else if (is_or(input[1],"read","r")) mode = md::read;
-		else if (is_or(input[1],"show","s")) mode = md::show;
+		else if (is_or(input[1],"show","s","cal","c")) mode = md::show;
 		else if (is_or(input[1],"dir","h")) {
 			hash_i2 = false;
 			mode = md::dir;

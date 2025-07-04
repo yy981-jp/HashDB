@@ -1,5 +1,5 @@
 #pragma once
-#define VERSION "v1.3"
+#define VERSION "v1.4"
 #include <string>
 
 
@@ -10,7 +10,7 @@ inline std::string explanation =
 	"\n read\t要素を読み込み\t\trとも記述可能"
 	"\n edit\t要素を編集or作成\teとも記述可能"
 	"\n del\t要素を削除\t\tdやdeleteとも記述可能"
-	"\n show\tHash値を求める\t\tsとも記述可能"
+	"\n show\tHash値を求める\t\tsやcalやcとも記述可能"
 	"\n dir\t.HashDBを手動で生成\thとも記述可能"
 	"\n pass\t管理パスワードを変更"
 	"\n view\t一覧を表示"
@@ -54,5 +54,7 @@ extern const std::string localappdata;
 extern const std::string path;
 extern const std::string ppath;
 extern const std::string dirHashName;
+extern const std::string EM0;
+extern const std::string sysPass;
 extern uint8_t hsType;
 extern std::vector<std::string> input;

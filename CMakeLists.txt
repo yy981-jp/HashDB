@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
-project(HS) # HashDataBaseh
+project(HS) # HashDataBase
 add_compile_options(-fdiagnostics-color=always)
 
 set(CMAKE_CXX_STANDARD 23)
 
 # ソースファイル
 set(SOURCES
+	# app.rc
 	hashdb.cpp
 	def.cpp
 	utility.cpp
